@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <label for="nombre">Ingrese su nombre</label>
+        <input id="nombre" type="text">
+        <input id="nombre" type="text">
+        <br><br>
+        <label for="">Bueno</label>
+        <input type="radio" name="prueba1" value="bueno">
+        <label for="">Malo</label>
+        <input type="radio" name="prueba1" value="malo">
+
+        <button type="button" onclick="mostrar()">Mandar Información</button>
+    </form>
+    <script>
+        //getElementsByTagName devuelve un arreglo con 
+        //todas las etiquetas
+        let elementos = document.getElementsByTagName('input');
+        console.log(elementos)
+        //SI NOS PIDEN QUE TIPO DE INPUT ES LOS QUE TENEMOS EN NUESTRO 
+        //FORMULARIO
+        let contadorTexto=0;
+        for(let i=0; i<elementos.length; i++){
+            //verificamos si esque es de tipo texto
+            if(elementos[i].type=="text"){
+                contadorTexto++;
+            }
+        }
+        console.log(contadorTexto)
+
+        
+    </script>
+</body>
+
+</html>

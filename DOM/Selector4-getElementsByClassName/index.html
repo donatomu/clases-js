@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .item{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li class="item">HTML</li>
+        <li class="item">JAVA</li>
+        <li class="item">JS</li>
+    </ul>
+    <script>
+        let elementos = document.getElementsByClassName('item');
+        for(let i=0;i<elementos.length;i++){
+            console.log(elementos[i].textContent)
+        }
+
+    </script>
+</body>
+</html>
