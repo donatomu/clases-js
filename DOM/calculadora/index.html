@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="calculadora">
+        <input type="text" id="principal" readonly placeholder="0">
+        <div class="buttons">
+            <button onclick="presionar('7')">7</button>
+            <button onclick="presionar('8')">8</button>
+            <button onclick="presionar('9')">9</button>
+            <button onclick="presionar('+')">+</button>
+            <button onclick="presionar('4')">4</button>
+            <button onclick="presionar('5')">5</button>
+            <button onclick="presionar('6')">6</button>
+            <button onclick="presionar('-')">-</button>
+            <button onclick="presionar('1')">1</button>
+            <button onclick="presionar('2')">2</button>
+            <button onclick="presionar('3')">3</button>
+            <button onclick="presionar('*')">*</button>
+            <button onclick="presionar('0')">0</button>
+            <button onclick="presionar('.')">.</button>
+            <button onclick="presionar('/')">/</button>
+            <button onclick="limpiar()">C</button>
+            <button onclick="calcular()">=</button>
+        </div>
+    </div>
+    <script>
+        function presionar(valor){
+            let elemento = document.getElementById('principal');
+            elemento.value += valor;
+        }
+        function limpiar(){
+            let elemento = document.getElementById('principal');
+            elemento.value = '';
+        }
+        function calcular(){
+            let elementoValor = document.getElementById('principal').value;
+            let resultado = 0;
+            try{
+                resultado = eval(elementoValor);
+            }catch(error){
+                alert("Hay un error en la operación")
+            }
+            document.getElementById('principal').value = resultado;
+        }
+
+    </script>
+</body>
+</html>

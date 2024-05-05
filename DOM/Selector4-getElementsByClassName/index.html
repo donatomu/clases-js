@@ -17,6 +17,11 @@
         <li class="item">JS</li>
     </ul>
     <script>
+        /*
+            Devuelve una lista de elementos que tienen la misma clase
+            en el caso que no encuentre coincidencia devuelve un arreglo vacio []
+        
+        */
         let elementos = document.getElementsByClassName('item');
         for(let i=0;i<elementos.length;i++){
             console.log(elementos[i].textContent)
