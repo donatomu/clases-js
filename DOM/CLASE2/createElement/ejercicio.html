@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio</title>
+</head>
+<body>
+    <form id="curso-formulario">
+        <label for="curso-nombre">Nombre del curso: </label>
+        <input type="text" id="curso-nombre" name="curso-nombre">
+        <br>
+        <label for="descripcion">Descripcion: </label>
+        <input type="text" id="descripcion" name="descripcion">
+        <br>
+        <label for="nivel-dificultad">Nivel dificultad: </label>
+        <select name="nivel-dificultad" id="nivel-dificultad">
+            <option value="principiante">Principiante</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+        </select>
+        <br>
+        <button type="button" onclick="agregarCurso()">Agregar Curso</button>
+    </form>
+
+    <ul id="curso-lista">
+
+    </ul>
+    <script src="ejercicio.js"></script>
+</body>
+</html>
