@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .reporte {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .reporte h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .saldo {
+            font-size: 18px;
+            color: #007bff;
+        }
+        .formulario {
+            display: none;
+            margin-top: 20px;
+        }
+        .formulario label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .formulario input {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .formulario button {
+            margin-top: 10px;
+        }
+        .monto-ingresado,
+        .monto-retirado {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido a tu caja, <span id="usuario"></span>!</h1>
+        <button onclick="consultarSaldo()">Consultar saldo</button>
+        <button onclick="mostrarFormulario('ingreso')">Ingresar monto</button>
+        <button onclick="mostrarFormulario('retiro')">Retirar monto</button>
+
+        <div class="reporte" id="reporte" style="display: none;">
+            <h2>Reporte de saldo</h2>
+            <p>Su saldo actual es: S/.<span class="saldo" id="saldo"></span> soles.</p>
+            <p class="monto-ingresado" id="monto-ingresado" style="display: none;"></p>
+            <p class="monto-retirado" id="monto-retirado" style="display: none;"></p>
+        </div>
+
+        <div class="formulario" id="formulario">
+            <form onsubmit="realizarOperacion(event)">
+                <label for="monto">Monto a <span id="operacion-label"></span>:</label>
+                <input type="number" id="monto" required>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Recuperar los datos del usuario de la sesión
+        const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+
+        // Mostrar el nombre del usuario en la página
+        document.getElementById('usuario').innerText = usuario.nombre;
+
+        // Función para consultar el saldo
+        function consultarSaldo() {
+            const saldo = usuario.saldo;
+            document.getElementById('saldo').innerText = saldo;
+            document.getElementById('reporte').style.display = 'block';
+            document.getElementById('formulario').style.display = 'none';
+            document.getElementById('monto-ingresado').style.display = 'none';
+            document.getElementById('monto-retirado').style.display = 'none';
+        }
+
+        // Función para mostrar el formulario de ingreso o retiro de monto
+        function mostrarFormulario(tipoOperacion) {
+            document.getElementById('operacion-label').innerText = (tipoOperacion === 'ingreso') ? 'ingresar' : 'retirar';
+            document.getElementById('formulario').style.display = 'block';
+            document.getElementById('reporte').style.display = 'none';
+            document.getElementById('monto-ingresado').style.display = 'none';
+            document.getElementById('monto-retirado').style.display = 'none';
+        }
+
+        // Función para realizar la operación de ingreso o retiro de monto
+        function realizarOperacion(event) {
+            event.preventDefault();
+            const monto = parseFloat(document.getElementById('monto').value);
+            const tipoOperacion = document.getElementById('operacion-label').innerText;
+            if (tipoOperacion === 'ingresar') {
+                ingresarMonto(monto);
+            } else if (tipoOperacion === 'retirar') {
+                retirarMonto(monto);
+            }
+        }
+
+        // Función para ingresar monto
+        function ingresarMonto(monto) {
+            const saldoAnterior = usuario.saldo;
+            const nuevoSaldo = saldoAnterior + monto;
+            usuario.saldo = nuevoSaldo;
+
+            // Mostrar el monto ingresado y el nuevo saldo
+            document.getElementById('reporte').style.display = 'block';
+            document.getElementById('formulario').style.display = 'none';
+            document.getElementById('saldo').innerText = nuevoSaldo;
+            document.getElementById('monto-ingresado').innerText = `Se ha ingresado S/.${monto} soles`;
+            document.getElementById('monto-ingresado').style.display = 'block';
+        }
+
+        // Función para retirar monto
+        function retirarMonto(monto) {
+            const saldoAnterior = usuario.saldo;
+            if (monto > saldoAnterior) {
+                alert('No tiene saldo suficiente para realizar esta operación.');
+                return;
+            }
+            const nuevoSaldo = saldoAnterior - monto;
+            usuario.saldo = nuevoSaldo;
+
+            // Mostrar el monto retirado y el nuevo saldo
+            document.getElementById('reporte').style.display = 'block';
+            document.getElementById('formulario').style.display = 'none';
+            document.getElementById('saldo').innerText = nuevoSaldo;
+            document.getElementById('monto-retirado').innerText = `Se ha retirado S/.${monto} soles.`;
+            document.getElementById('monto-retirado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
