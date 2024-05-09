@@ -12,6 +12,7 @@ function consultarSaldo() {
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('monto-ingresado').style.display = 'none';
     document.getElementById('monto-retirado').style.display = 'none';
+    document.getElementById('error').style.display = 'none';
 }
 
 // Función para mostrar el formulario de ingreso o retiro de monto
