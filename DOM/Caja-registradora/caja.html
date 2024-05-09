@@ -70,6 +70,7 @@
         .formulario button {
             margin-top: 10px;
         }
+        .error,
         .monto-ingresado,
         .monto-retirado {
             font-size: 16px;
@@ -90,7 +91,6 @@
             <p class="monto-ingresado" id="monto-ingresado" style="display: none;"></p>
             <p class="monto-retirado" id="monto-retirado" style="display: none;"></p>
         </div>
-
         <div class="formulario" id="formulario">
             <form onsubmit="realizarOperacion(event)">
                 <label for="monto">Monto a <span id="operacion-label"></span>:</label>
@@ -98,6 +98,8 @@
                 <button type="submit">Confirmar</button>
             </form>
         </div>
+
+        <p class="error" id="error" style="display: none; color: red;"></p>
     </div>
 
     <script>
@@ -124,6 +126,7 @@
             document.getElementById('reporte').style.display = 'none';
             document.getElementById('monto-ingresado').style.display = 'none';
             document.getElementById('monto-retirado').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
         }
 
         // Función para realizar la operación de ingreso o retiro de monto
@@ -133,8 +136,10 @@
             const tipoOperacion = document.getElementById('operacion-label').innerText;
             if (tipoOperacion === 'ingresar') {
                 ingresarMonto(monto);
+                //document.getElementById('error').style.display = 'none';
             } else if (tipoOperacion === 'retirar') {
                 retirarMonto(monto);
+                //document.getElementById('error').style.display = 'none';
             }
         }
 
@@ -142,6 +147,12 @@
         function ingresarMonto(monto) {
             const saldoAnterior = usuario.saldo;
             const nuevoSaldo = saldoAnterior + monto;
+            if(nuevoSaldo>990){
+                document.getElementById('error').innerText = 'Error, no puede tener más de S/.990 soles en su cuenta.';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('monto').value = '';
+                return;
+            }
             usuario.saldo = nuevoSaldo;
 
             // Mostrar el monto ingresado y el nuevo saldo
@@ -150,6 +161,8 @@
             document.getElementById('saldo').innerText = nuevoSaldo;
             document.getElementById('monto-ingresado').innerText = `Se ha ingresado S/.${monto} soles`;
             document.getElementById('monto-ingresado').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('monto').value = '';
         }
 
         // Función para retirar monto
@@ -160,6 +173,12 @@
                 return;
             }
             const nuevoSaldo = saldoAnterior - monto;
+            if(nuevoSaldo<10){
+                document.getElementById('error').innerText = 'Error, no puede tener menos de S/.10 soles em su cuenta.';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('monto').value = '';
+                return;
+            }
             usuario.saldo = nuevoSaldo;
 
             // Mostrar el monto retirado y el nuevo saldo
@@ -168,6 +187,8 @@
             document.getElementById('saldo').innerText = nuevoSaldo;
             document.getElementById('monto-retirado').innerText = `Se ha retirado S/.${monto} soles.`;
             document.getElementById('monto-retirado').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('monto').value = '';
         }
     </script>
 </body>

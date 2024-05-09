@@ -29,7 +29,6 @@ function ingresar() {
             return;
         }else{
             mostrarMensaje("¡Nombre de usuario o contraseña incorrectos!", "error");
-            return;
         }
     }
     
