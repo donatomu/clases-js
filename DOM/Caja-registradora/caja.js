@@ -1,5 +1,5 @@
 // Recuperar los datos del usuario de la sesión
-const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+let usuario = JSON.parse(sessionStorage.getItem('active_user'));
 
 // Mostrar el nombre del usuario en la página
 document.getElementById('usuario').innerText = usuario.nombre;
@@ -50,6 +50,8 @@ function ingresarMonto(monto) {
         return;
     }
     usuario.saldo = nuevoSaldo;
+    sessionStorage.setItem(usuario.nombre, JSON.stringify(usuario));
+    sessionStorage.setItem('active_user', JSON.stringify(usuario));
 
     // Mostrar el monto ingresado y el nuevo saldo
     document.getElementById('reporte').style.display = 'block';
@@ -76,6 +78,8 @@ function retirarMonto(monto) {
         return;
     }
     usuario.saldo = nuevoSaldo;
+    sessionStorage.setItem(usuario.nombre, JSON.stringify(usuario));
+    sessionStorage.setItem('active_user', JSON.stringify(usuario));
 
     // Mostrar el monto retirado y el nuevo saldo
     document.getElementById('reporte').style.display = 'block';
@@ -85,4 +89,8 @@ function retirarMonto(monto) {
     document.getElementById('monto-retirado').style.display = 'block';
     document.getElementById('error').style.display = 'none';
     document.getElementById('monto').value = '';
+}
+
+function cerrarSesion() {
+    window.location.href = 'index.html';
 }
