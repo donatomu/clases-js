@@ -32,7 +32,7 @@ function ingresar() {
       }
       setTimeout(() => {
         window.location.href = "caja.html";
-      }, 1000);
+      }, 500);
       return;
     } else {
       mostrarMensaje("¡Nombre de usuario o contraseña incorrectos!", "error");
