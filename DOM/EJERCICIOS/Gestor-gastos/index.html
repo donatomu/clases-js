@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Gestor de gastos</h1>
+        <div class="formulario">
+            <input type="text" id="concepto" placeholder="Concepto">
+            <input type="number" id="monto" placeholder="Monto">
+            <select name="" id="categoria">
+                <option value="" selected disabled>Ingrese su categoria</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Otros">Otros</option>
+            </select>
+            <button id="agregar" >Agregar Gasto</button>
+        </div>
+        <div class="lista">
+            <h2>Lista de gastos</h2>
+            <ul id="lista-gastos">
+            </ul>
+        </div>
+        <div class="informe">
+            <h2>Informe mensual</h2>
+            <p id="total-gastos">Total de gastos: S/.</p>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
