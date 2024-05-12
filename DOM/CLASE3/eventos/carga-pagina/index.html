@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <img id="logo">
+
+    <script>
+        //DOMContentLoaded:
+        //Es un evento que se dispara cuando el documento HTML se ha cargado completamente, lo cual significa que ya se 
+        //puede acceder a todos los elementos del DOM. No espera a que carguen las imágenes y los estilos.
+
+        //LOAD:
+        //Es un evento que se dispara cuando todos los recursos de la página web se han cargado completamente, incluyendo
+        //imágenes, estilos, scripts, etc.
+        document.addEventListener('DOMContentLoaded', function(){
+            console.log('El documento ha sido cargado completamente');
+        });
+        let logo = document.querySelector('#logo')
+        logo.addEventListener('load', function(){
+            console.log('La imagen ha sido cargada completamente');
+        });
+        logo.src = "Batman-Logo.png"
+
+    </script>
+</body>
+</html>

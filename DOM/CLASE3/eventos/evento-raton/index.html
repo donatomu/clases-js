@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <button onclick="manejadorClick()" onmouseover="manejadorSobre()">CLICK AQUI</button>
+    <br>
+    <label for="">Ingrese nombre</label>
+    <input type="text" id="nombre" onmouseout="manejadorSalida()">
+    <script>
+        //Manejador de click
+        //Manejador cuando el mouse está sobre algún elemento
+        //Manejador cuando el mouse sale de algún elemento
+        let nombre = document.getElementById('nombre');
+        function manejadorClick(){
+            console.log('Click');
+        }
+        function manejadorSobre(){
+            console.log('Sobre');
+        }
+        function manejadorSalida(){
+            if(nombre.value == ''){
+                alert('Campo vacío');
+            }
+        }
+    </script>
+</body>
+</html>

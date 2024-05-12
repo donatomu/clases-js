@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="cambiar-color" class="cambio-color">Cambiar color</button>
+    <div id="principal">Prueba</div>
+    <script>
+        let boton = document.getElementById('cambiar-color');
+        let principal = document.getElementById('principal');
+        boton.addEventListener('click', () =>{
+            principal.setAttribute('style', 'color: red; font-size: 30px');
+        })
+        /*
+        function cambiarColor(){
+            principal.setAttribute('style', 'color: red; font-size: 30px');
+        }*/
+    </script>
+</body>
+</html>

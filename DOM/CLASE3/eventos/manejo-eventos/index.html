@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="mostrarTexto()" id="btnTexto">Mostrar texto</button>
+
+    <script>
+        //CONTROLADOR DOM V1
+        /*
+        function mostrarTexto(){
+            let texto = document.createElement('p');
+            texto.textContent = 'Hola mundo';
+            document.body.append(texto);
+        }*/
+        let btnTexto = document.getElementById('btnTexto');
+
+        btnTexto.addEventListener('click',function(event) {
+            //agregue un div
+            alert(event.type); // click
+        });
+
+        btnTexto.addEventListener('click',function(event) {
+            //refresque la página
+            alert('OK');
+        });
+    </script>
+</body>
+</html>

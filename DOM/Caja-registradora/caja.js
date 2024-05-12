@@ -18,6 +18,12 @@ function consultarSaldo() {
 // Función para mostrar el formulario de ingreso o retiro de monto
 function mostrarFormulario(tipoOperacion) {
     document.getElementById('operacion-label').innerText = (tipoOperacion === 'ingreso') ? 'ingresar' : 'retirar';
+    /*
+    if(tipoOperacion === 'ingreso'){
+        document.getElementById('operacion-label').innerText = 'ingresar';
+    }else{
+        document.getElementById('operacion-label').innerText = 'retirar';
+    }*/
     document.getElementById('formulario').style.display = 'block';
     document.getElementById('reporte').style.display = 'none';
     document.getElementById('monto-ingresado').style.display = 'none';
@@ -27,7 +33,7 @@ function mostrarFormulario(tipoOperacion) {
 
 // Función para realizar la operación de ingreso o retiro de monto
 function realizarOperacion(event) {
-    event.preventDefault();
+    event.preventDefault(); // Evitar que el formulario se envíe
     const monto = parseFloat(document.getElementById('monto').value);
     const tipoOperacion = document.getElementById('operacion-label').innerText;
     if (tipoOperacion === 'ingresar') {
@@ -41,7 +47,7 @@ function realizarOperacion(event) {
 
 // Función para ingresar monto
 function ingresarMonto(monto) {
-    const saldoAnterior = usuario.saldo;
+    const saldoAnterior = usuario.saldo; //captura el saldo anterior
     const nuevoSaldo = saldoAnterior + monto;
     if(nuevoSaldo>990){
         document.getElementById('error').innerText = 'Error, no puede tener más de S/.990 soles en su cuenta.';
@@ -50,6 +56,7 @@ function ingresarMonto(monto) {
         return;
     }
     usuario.saldo = nuevoSaldo;
+    //ACTUALIZA LOS CAMBIOS
     sessionStorage.setItem(usuario.nombre, JSON.stringify(usuario));
     sessionStorage.setItem('active_user', JSON.stringify(usuario));
 
@@ -77,6 +84,7 @@ function retirarMonto(monto) {
         document.getElementById('monto').value = '';
         return;
     }
+    //ACTUALIZA LOS CAMBIOS
     usuario.saldo = nuevoSaldo;
     sessionStorage.setItem(usuario.nombre, JSON.stringify(usuario));
     sessionStorage.setItem('active_user', JSON.stringify(usuario));
