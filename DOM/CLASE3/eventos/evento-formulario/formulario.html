@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="formulario1">
+        <label for="">Ingrese su correo </label>
+        <input id="correo" type="email">
+        <span id="emailError" class="error"></span><br><br>
+        <input type="submit" value="Registrarse">
+    </form>
+
+    <script>
+        let formulario = document.getElementById('formulario1');
+        let correo = document.getElementById('correo');
+        let emailError = document.getElementById('emailError');
+
+        //Quiero que pueda validarse el formato del correo antes de enviar el formulario (change)
+        correo.addEventListener('change',function(event){
+            let valor = correo.value;
+            if(!validarCorreo(valor)){
+                emailError.textContent = 'El correo no tiene un formato válido';
+            }else{
+                emailError.textContent= 'Correo valido';
+                correo.value='';
+            }
+        })
+
+        function validarCorreo(correo){
+            // nombre@dominio.com
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(correo);
+        }
+        
+    </script>
+</body>
+</html>

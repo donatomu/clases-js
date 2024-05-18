@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="texto">Ingrese su texto</label>
+    <br>
+    <textarea name="texto" class="prueba" id="texto" rows="10" cols="30"></textarea>
+    <div id="respuesta">
+        <!-- Aqui va a a estar el parrafo-->
+    </div>
+
+    <script>
+        /*keydown: Se ejecuta cuando se presiona una tecla
+        keyup: Se ejecuta cuando se suelta una tecla
+        keypress: Se ejecuta cuando se presiona una tecla y se mantiene presionada
+        
+        document.addEventListener('keydown',function(event){
+            console.log('La tecla presionada es: ',event.key)
+        })
+
+        document.addEventListener('keyup',function(event){
+            console.log('Tecla liberada: ', event.key)
+        })
+
+        document.addEventListener('keypress',function(event){
+            console.log('Caracter presionado: ',event.key)
+        })
+        */
+        let textArea = document.querySelector('#texto')
+        //let elemento = document.querySelector('textarea')
+        let parrafo = document.createElement('p')
+        let divRespuesta = document.querySelector('#respuesta')
+        divRespuesta.append(parrafo)
+        textArea.addEventListener('keydown', function(evento){
+            parrafo.innerText = textArea.value;
+        })
+
+
+    </script>
+</body>
+</html>

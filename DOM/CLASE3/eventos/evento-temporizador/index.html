@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Temporizador en JS</h1>
+    <p id="tiempoMensaje"></p>
+    <p id="intervaloMensaje"></p>
+    <script>
+        /*
+        setTimeout: Ejecuta una funcion despues de un tiempo determinado
+        */
+        let parrafo = document.getElementById('tiempoMensaje')
+        setTimeout(function(){
+            parrafo.textContent = 'Han pasado 3 segundos'
+        }, 3000)
+
+        // setInterval: Ejecuta una funcion cada cierto tiempo
+        let a = 1;
+        let b = 1;
+        function intervalo(){
+            let elemento = document.getElementById('intervaloMensaje');
+            let multiplicador = a*b;
+            elemento.textContent = a + " * " + b + " = " + multiplicador;
+            a++;
+            b++;
+        }
+
+        let intervalos = setInterval(intervalo, 1000)
+
+        
+
+        
+    </script>
+</body>
+</html>
