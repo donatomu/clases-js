@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="manejadorSubmit(event)">
+        <input type="text" onchange="manejadorChange(event)" onfocus="manejadorFocus(event)" >
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        /*
+        Submit: Se ejecuta cuando se presiona un botón y se envia el formulario
+        Change: Se ejecuta cuando se cambia el valor de un input
+        Focus: Se ejecuta cuando se selecciona un input
+        */
+        function manejadorSubmit(event){
+            event.preventDefault();
+            console.log('Formulario enviado');
+        }
+
+        //Se ejecuta cuando se registra un cambio 
+        function manejadorChange(event){
+            console.log('El valor cambiado es: ', event.target.value)
+        }
+
+        function manejadorFocus(event){
+            console.log('Elemento enfocado', event.target)
+        }
+    </script>
+</body>
+</html>
