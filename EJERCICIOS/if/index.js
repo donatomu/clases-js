@@ -112,4 +112,3 @@ if (cantidad >10){
 }
 console.log(`El nombre del producto es: ${producto}`)
 console.log("el precioTotal va ser: " + precioTotal);
- 
