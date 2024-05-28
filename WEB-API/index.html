@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        //Local storage: Se usar para guardar datos en el navegador del usuario,
+        //estos datos van a persistir
+        /*
+        Session storage: nos sirve para guardar datos de la sesiónm estos datos se van a borrar
+        si el usuario cierra la pestaña o el navegador
+        */ 
+        //localStorage y sessionStorage .setItem('K','V') .getItem('K') .removeItem('K')  .clear()
+        
+        localStorage.setItem('nombre', 'Ronald')
+        localStorage.setItem('numeros', [0,1,2,3])
+        //PARA CONVERTIR UN OBJETO A JSON
+        localStorage.setItem('objeto', JSON.stringify({nombre: 'Daniel', edad: 23}))
+
+        //remuevas el item con la clave 'nombre'
+    
+        localStorage.removeItem("nombre")
+
+        console.log(localStorage.getItem('numeros'))
+
+        //localStorage.clear()
+
+        sessionStorage.setItem('nombre', 'Ronald')
+        
+        
+        
+    </script>
+</body>
+</html>

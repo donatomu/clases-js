@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejemplo sessions storage y local storage</h1>
+    <label for="nombre">Ingresa tu nombre</label>
+    <input type="text" id="nombre" placeholder="ingresa tu nombre">
+    <button onclick="guardarEnLocalStorage()" >guardar en el localStorage</button>
+    <button onclick="guardarEnSessionStorage()">guardar en el sessionStorage</button>
+    <button onabort="mostrarDatos()">mostrarTodo</button>
+    <button onclick="eliminarTodo()">EliminarTodo</button>
+    <div id="resultado"></div>
+
+
+    <script>
+        function guardarEnLocalStorage(){
+            let nombre = document.getElementById('nombre').value
+            localStorage.setItem('nombre', nombre)
+            alert('nombre guardado en el localStorage')
+        }
+
+        function guardarEnSessionStorage(){
+            let nombre = document.getElementById('nombre').value
+            sessionStorage.setItem('nombre', nombre)
+            alert('nombre guardado en el sessionStorage')
+        }
+
+        function mostrarDatos(){
+            let localNombre = localStorage.getItem('nombre')
+            let sessionNombre = sessionStorage.getItem('nombre')
+            let resultado = '<h2>Datos almacenados</h2>'
+
+            if(localNombre !=null){
+                resultado += `<h1>Nombre almacenado en el localStorage: ${localNombre}</h1>`
+            }else{
+                resultado += `<p>No hay datos almacenados en el localStorage</p>`
+            }
+
+            if(sessionNombre !=null){
+                resultado += `<h1>Nombre almacenado en el sessión storage: ${sessionNombre}</h1>`
+            }else{
+                resultado += `<p>No hay datos almacenados en el sessión storage</p>`
+            }
+
+            document.getElementById('resultado').innerHTML = resultado 
+        }
+
+        function eliminarTodo(){
+            localStorage.clear()
+            sessionStorage.clear()
+            alert('Datos eliminados')
+        }
+
+        
+
+        
+    </script>
+    
+</body>
+</html>
