@@ -17,7 +17,6 @@ function ordenamientoBurbuja(arreglo){
                 arreglo[j+1] = aux;
             }
         }
-
         console.log(arreglo);
     }   
     return arreglo;
