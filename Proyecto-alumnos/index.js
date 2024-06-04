@@ -7,40 +7,39 @@ Materias inscritas
 Calificaciones
 */
 class Alumno{
+  constructor(nombre,apellidos,edad){
+    this.nombre = nombre;
+    this.apellidos = apellidos;
+    this.edad = edad;
+    this.materias = []; //se inicializa como un arreglo vacio
+    this.calificaciones = {}; // Programacion: 10, Matematicas: 9
+    this.promedio=0;
+  }
 
-    constructor(nombre,apellidos,edad){
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.edad = edad;
-        this.materias = []; //se inicializa como un arreglo vacio
-        this.calificaciones = {}; // Programacion: 10, Matematicas: 9
+  inscribirMateria(materia){
+    // .includes() busca un elemento dentro de un arreglo y regresa true si lo encuentra
+    if(!this.materias.includes(materia)){
+        this.materias.push(materia);
     }
-
-    inscribirMateria(materia){
-        // .includes() busca un elemento dentro de un arreglo y regresa true si lo encuentra
-        if(!this.materias.includes(materia)){
-            this.materias.push(materia);
-        }
-    }
+  }
     
-    asignarCalificacion(materia,calificacion){
-        this.calificaciones[materia] = calificacion;
-    }
-
-    obtenerPromedio(){
-        // lo primero que hay que hacer  es convertir el objeto a un arreglo
-        let calificaciones = Object.values(this.calificaciones);
-        let total = calificaciones.reduce((acumulador , valor) => acumulador + valor, 0);
-        //console.log(calificaciones);
-        //console.log(total);
-        if(calificaciones.length > 0){
-            return total/calificaciones.length;
-        }else{
-            return 0;
-        }   
-        // ? operador ternario
-        //return calificaciones.length > 0 ? total/calificaciones.length : 0;  
-    }
+  asignarCalificacion(materia,calificacion){
+    this.calificaciones[materia] = calificacion;
+  }
+  obtenerPromedio(){
+    // lo primero que hay que hacer  es convertir el objeto a un arreglo
+    let calificaciones = Object.values(this.calificaciones);
+    let total = calificaciones.reduce((acumulador , valor) => acumulador + valor, 0);
+    //console.log(calificaciones);
+    //console.log(total);
+    if(calificaciones.length > 0){
+        return total/calificaciones.length;
+    }else{
+        return 0;
+    }   
+    // ? operador ternario
+    //return calificaciones.length > 0 ? total/calificaciones.length : 0;  
+  }
 }
 /*
 let alumno1 = new Alumno("Juan","Perez",20);
@@ -58,6 +57,19 @@ let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
 function guardarAlumnos(){
     localStorage.setItem('alumnos',JSON.stringify(alumnos)); // stringify convierte un objeto a un string
 }
+
+document.querySelectorAll(".dropdown-btn").forEach(button => {
+  button.addEventListener('click', function() {
+    this.classList.toggle("active");
+    const dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none"; // si esta visible lo oculta
+    } else {
+      dropdownContent.style.display = "block"; // si esta oculto lo muestra
+    }
+  }); 
+})
+
 
 document.getElementById("linkAlta").addEventListener("click", mostrarFormularioAlta);
 document.getElementById("linkInscribir").addEventListener("click", mostrarFormularioInscripcion);
@@ -286,8 +298,159 @@ function mostrarFormularioGrupos() {
     }
   }
   
+function mostrarFormularioBuscar(){
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <h2>Buscar alumno</h2>
+    <form id="formBuscar">
+        <label for="criterio">Criterio de busqueda:</label>
+        <select id= "criterio">
+          <option value="" disabled selected>Seleccione un criterio</option>
+          <option value="nombre">Nombre</option>
+          <option value="apellidos">Apellidos</option>
+        </select><br>
+        <label for="valor">Valor:</label>
+        <input type="text" id="valor" required><br>
+        <button type="submit">Buscar</button>
+    </form>
+    <div id="resultados"></div>
+  `;
 
+  document.getElementById('formBuscar').addEventListener('submit', function(e){
+    e.preventDefault();
+    let criterio = document.getElementById('criterio').value;
+    let valor = document.getElementById('valor').value;
+    let resultados = []; //el arreglo de los alumnos
 
+    if(criterio === '' || valor === ''){
+      alert('Seleccione un criterio de busqueda');
+      return;
+    }
+
+    //BUSQUEDA SECUENCIAL
+    for(let i =0;i<alumnos.length;i++){
+      if(criterio === 'nombre' && alumnos[i].nombre.includes(valor)){ 
+        resultados.push(alumnos[i]);
+      }else if(criterio === 'apellidos' && alumnos[i].apellidos.includes(valor)){
+        resultados.push(alumnos[i]);
+      }
+    }
+
+    document.getElementById('valor').value = '';
+    document.getElementById('criterio').value = '';
+    mostrarResultados(resultados)
+  })
+}
+
+function mostrarResultados(resultados){
+  let resultadosDiv = document.getElementById('resultados');
+  resultadosDiv.innerHTML = '<h3>Resultados de la busqueda</h3>';
+
+  if(resultados.length>0){
+    resultados.forEach(alumno =>{
+      let alumnoDiv = document.createElement('div');
+      let promedio;
+      if(alumno.obtenerPromedio == null){
+        promedio = 0;
+      }else{
+        promedio = alumno.obtenerPromedio().toFixed(2);
+      }
+      alumnoDiv.innerHTML = `
+        <strong>${alumno.nombre} ${alumno.apellidos}</strong> - Edad: ${alumno.edad} - Promedio: ${promedio}
+        <ul>
+          ${Object.entries(alumno.calificaciones).map(([materia, calificacion]) => `<li>${materia}: ${calificacion}</li>`).join('')}
+        </ul>
+      `
+      resultadosDiv.appendChild(alumnoDiv);
+    });
+  }else{
+    resultadosDiv.innerHTML = '<h3>No se encontraron resultados</h3>';
+  }
+}
+
+function mostrarFormularioPromedioAlumno(){
+  let content = document.getElementById('content');
+  if(alumnos.length === 0 ){
+    alert('No hay alumnos registrados');
+    mostrarFormularioAlta();
+    return;
+  }
+  const alumnosOptions = alumnos.map((al, index) => `<option value="${index}">${al.nombre} ${al.apellidos}</option>`).join('');
+  content.innerHTML = `
+    <h2>Obtener Promedio de un Alumno</h2>
+    <form id="formPromedioAlumno">
+      <label for="selectAlumno">Seleccionar Alumno:</label>
+      <select id="selectAlumno">
+        <option value="" disabled selected>Seleccione un alumno</option>  
+        ${alumnosOptions}
+      </select><br>
+      <button type="submit">Obtener Promedio</button>
+    </form>
+    <div id="resultadoPromedioAlumno"></div>
+  `;
+
+  document.getElementById('formPromedioAlumno').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let indexAlumno = document.getElementById('selectAlumno').value;
+    let alumno = JSON.parse(localStorage.getItem('alumnos'))[indexAlumno]; // numeros[0] numeros[1]
+    let promedio ;
+    if(alumno.obtenerPromedio == null){
+      alert('El alumno no tiene calificaciones asignadas')
+      return;
+    }else{
+      promedio = alumno.obtenerPromedio().toFixed(2);
+    }
+    document.getElementById('resultadoPromedioAlumno').innerHTML = `Promedio de ${alumno.nombre} ${alumno.apellidos} : ${promedio}`
+  })
+}
+
+// Función para mostrar el formulario de obtener el promedio del grupo
+function mostrarFormularioPromedioGrupo() {
+  const content = document.getElementById('content');
+  const grupos = JSON.parse(localStorage.getItem('grupos')) || [];
+
+  //valida si no hay grupos creados
+  if(grupos.length == 0){
+    alert('No hay grupos creados, por favor crea un grupo primero.');
+    //redirigue a la creacion de grupos 
+    mostrarFormularioGrupos();
+    return;
+  }
+  opcionesGrupos = grupos.map(grupo => `<option value="${grupo.nombre}">${grupo.nombre}</option>`).join('');
+
+  content.innerHTML = `
+    <h2>Obtener Promedio del Grupo</h2>
+    <form id="formPromedioGrupo">
+      <label for="selectGrupo">Seleccionar Grupo:</label>
+      <select id="selectGrupo">${opcionesGrupos}</select><br>
+      <button type="submit">Obtener Promedio</button>
+    </form>
+    <div id="resultadoPromedioGrupo"></div>
+  `;
+
+  document.getElementById('formPromedioGrupo').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nombreGrupo = document.getElementById('selectGrupo').value;
+    const grupos = JSON.parse(localStorage.getItem('grupos')) || [];
+    const grupo = grupos.find(grupo => grupo.nombre === nombreGrupo);
+    
+    let alumnos = [];
+    grupo.alumnos.forEach(index => {
+      alumnos.push(JSON.parse(localStorage.getItem('alumnos'))[index]);
+    })
+
+    // Añadir método obtenerPromedio a cada alumno con calificaciones, lo pongo porque me salia fallas sin esto 
+    alumnos.forEach(alumno => {
+      alumno.obtenerPromedio = function() {
+        const total = Object.values(this.calificaciones).reduce((acc, cal) => acc + cal, 0);
+        return total / Object.values(this.calificaciones).length;
+      };
+    })
+
+    const promedio = grupo.alumnos.reduce((acc, index) => acc + alumnos[index].obtenerPromedio(), 0) / grupo.alumnos.length;
+    document.getElementById('resultadoPromedioGrupo').textContent = `Promedio del Grupo ${grupo.nombre}: ${promedio}`;
+  });
+}
 
 
 
