@@ -84,6 +84,14 @@ function mostrarFormularioAlta(){
         let nombre = document.getElementById('nombre').value;
         let apellidos = document.getElementById('apellidos').value;
         let edad = parseInt(document.getElementById('edad').value);
+
+        if(edad < 0 || edad > 80){
+            alert("Edad no valida");
+            document.getElementById('edad').value = "";
+            document.getElementById('edad').focus();
+            return;
+        }
+
         let nuevoAlumno = new Alumno(nombre,apellidos,edad);
         alumnos.push(nuevoAlumno);
         guardarAlumnos();
@@ -156,8 +164,6 @@ function mostrarFormularioCalificaciones() {
     </form>
   `;
 
-  
-
     document.getElementById('nombre').addEventListener('change', function() {
         const alumnoIndex = document.getElementById('nombre').value;
         const alumno = alumnos[alumnoIndex];
@@ -188,8 +194,100 @@ function mostrarFormularioCalificaciones() {
         alert('Alumno no encontrado');
         }
     });
-    
 }
+
+function mostrarFormularioGrupos() {
+    const content = document.getElementById('content');
+    //LISTA DE MATERIAS DISPONIBLES
+    const materiasOptions = cursos.map(materia => `<option value="${materia}">${materia}</option>`).join('');
+  
+    content.innerHTML = `
+      <h2>Crear Grupos</h2>
+      <form id="formGrupos">
+        <label for="materiaGrupo">Seleccionar Materia:</label>
+        <select id="materiaGrupo" required>
+          <option value="" disabled selected>Selecciona una materia</option>
+          ${materiasOptions}
+        </select><br>
+        <label for="nombreGrupo">Nombre del Grupo:</label>
+        <input type="text" id="nombreGrupo" required><br>
+        <label for="alumnosGrupo">Agregar Alumnos al Grupo:</label>
+        <select id="alumnosGrupo" multiple></select><br>
+        <button type="submit">Crear Grupo</button>
+      </form>
+      <div id="gruposCreados">
+      </div>
+    `;
+  
+    document.getElementById('materiaGrupo').addEventListener('change', function() {
+      actualizarAlumnosYGrupos(this.value);
+    });
+  
+    document.getElementById('formGrupos').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nombreGrupo = document.getElementById('nombreGrupo').value;
+      const materiaGrupo = document.getElementById('materiaGrupo').value;
+      const alumnosSeleccionados = Array.from(document.getElementById('alumnosGrupo').selectedOptions).map(option => parseInt(option.value));
+  
+      const grupos = JSON.parse(localStorage.getItem('grupos')) || [];
+  
+      if (!grupos.find(grupo => grupo.nombre === nombreGrupo && grupo.materia === materiaGrupo)) {
+        const nuevoGrupo = {
+          nombre: nombreGrupo,
+          materia: materiaGrupo,
+          alumnos: alumnosSeleccionados
+        };
+        grupos.push(nuevoGrupo);
+        localStorage.setItem('grupos', JSON.stringify(grupos));
+        alert('Grupo creado con éxito');
+      } else {
+        alert('El grupo ya existe para esta materia');
+      }
+      actualizarAlumnosYGrupos(materiaGrupo);
+    });
+  
+    function actualizarAlumnosYGrupos(materia) {
+      let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+      let grupos = JSON.parse(localStorage.getItem('grupos')) || [];
+  
+      // Obtener los alumnos que ya están en algún grupo de la materia seleccionada y retorna un Set con los índices de los alumnos
+      const alumnosEnGrupos = new Set(grupos.filter(grupo => grupo.materia === materia).map(grupo => grupo.alumnos));
+      console.log(alumnosEnGrupos)
+  
+      // Filtrar los alumnos que están inscritos en la materia seleccionada y no están en ningún grupo de esa materia
+      const alumnosDisponibles = alumnos
+        .map((al, index) => ({ ...al, index }))
+        .filter(al => al.materias.includes(materia) && !alumnosEnGrupos.has(al.index));
+  
+      console.log(alumnosDisponibles)
+  
+      const alumnosOptions = alumnosDisponibles.map(al =>
+        `<option value="${al.index}">${al.nombre} ${al.apellidos}</option>`
+      ).join('');
+  
+      document.getElementById('alumnosGrupo').innerHTML = alumnosOptions;
+  
+      // Mostrar los grupos ya creados para la materia seleccionada
+      const gruposCreadosDiv = document.getElementById('gruposCreados');
+      gruposCreadosDiv.innerHTML = `<h3>Grupos Creados para ${materia}:</h3>`;
+  
+      const gruposMateria = grupos.filter(grupo => grupo.materia === materia);
+  
+      if (gruposMateria.length > 0) {
+        gruposMateria.forEach(grupo => {
+          const grupoDiv = document.createElement('div');
+          const alumnosGrupo = grupo.alumnos.map(index => `${alumnos[index]?.nombre || 'Desconocido'} ${alumnos[index]?.apellidos || ''}`).join(', ');
+          grupoDiv.innerHTML = `<strong>${grupo.nombre}</strong>: ${alumnosGrupo}`;
+          gruposCreadosDiv.appendChild(grupoDiv);
+        });
+      } else {
+        gruposCreadosDiv.innerHTML = '<h3>No se han creado grupos para esta materia.</h3>';
+      }
+    }
+  }
+  
+
+
 
 
 
