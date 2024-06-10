@@ -76,6 +76,7 @@ document.getElementById("linkInscribir").addEventListener("click", mostrarFormul
 document.getElementById("linkCalificaciones").addEventListener("click", mostrarFormularioCalificaciones);
 document.getElementById("linkGrupos").addEventListener("click", mostrarFormularioGrupos);
 document.getElementById("linkBuscar").addEventListener("click", mostrarFormularioBuscar);
+document.getElementById('linkOrdenarPorEdad').addEventListener('click', mostrarFormularioOrdenarPorEdad);
 
 function mostrarFormularioAlta(){
     const content = document.getElementById('content');
@@ -434,7 +435,7 @@ function mostrarFormularioPromedioGrupo() {
     const grupos = JSON.parse(localStorage.getItem('grupos')) || [];
     const grupo = grupos.find(grupo => grupo.nombre === nombreGrupo);
     
-    let alumnos = [];
+    let alumnos = []; //[0] [1] [2]
     grupo.alumnos.forEach(index => {
       alumnos.push(JSON.parse(localStorage.getItem('alumnos'))[index]);
     })
@@ -448,11 +449,144 @@ function mostrarFormularioPromedioGrupo() {
     })
 
     const promedio = grupo.alumnos.reduce((acc, index) => acc + alumnos[index].obtenerPromedio(), 0) / grupo.alumnos.length;
-    document.getElementById('resultadoPromedioGrupo').textContent = `Promedio del Grupo ${grupo.nombre}: ${promedio}`;
+    document.getElementById('resultadoPromedioGrupo').textContent = `Promedio del grupo ${grupo.nombre}: ${promedio}`;
   });
 }
 
+function mostrarListaAlumnosOrdenada(){
+  let content = document.getElementById('content');
+  
+  //
+  content.innerHTML = `
+    <h2>Lista de Alumnos Ordenados</h2>
+    <form id="formOrdenar">
+      <label for="materia">Materia:</label>
+      <select id="materia" required>
+        <option value="" selected disabled>Seleccione una materia</option>
+        ${cursos.map(materia => `<option value="${materia}">${materia}</option>`).join('')}
+      </select><br>
+      <label for="orden">Orden:</label>
+      <select id="orden" required>
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendente</option>
+      </select><br>
+      <button type="submit">Ordenar</button>
+    </form>
+    <div id="resultadosOrden"></div>
+  `;
 
+  document.getElementById('formOrdenar').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let materia = document.getElementById('materia').value;
+    let orden = document.getElementById('orden').value;
+    mostrarResultadosOrdenados(materia,orden);
+  })
+}
+
+function mostrarResultadosOrdenados(materia,orden){
+  let content = document.getElementById('resultadosOrden');
+  //FILTRAR ALUMNOS QUE TIENEN CALIFICACIONES Y ESTAN INSCRITOS EN LA MATERIA QUE YO SELECCIONE
+  //let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+  let alumnosConCalificaciones = alumnos.filter(alumno => alumno.materias.includes(materia) && Object.keys(alumno.calificaciones).length > 0);
+
+  if(alumnosConCalificaciones.length ===0 ){
+    alert('No hay alumnos con calificaciones asignadas en la materia seleccionada');
+    return;
+  }
+
+  // Añadir método obtenerPromedio a cada alumno con calificaciones, lo pongo porque me salia fallas sin esto 
+  alumnosConCalificaciones.forEach(alumno => {
+    alumno.obtenerPromedio = function() {
+      const total = Object.values(this.calificaciones).reduce((acc, cal) => acc + cal, 0);
+      return total / Object.values(this.calificaciones).length;
+    };
+  })
+
+  //ORDENAMIENTO BURBUJA
+  for(let i =0;i<alumnosConCalificaciones.length -1 ;i++){
+    for(let j =0 ; j<alumnosConCalificaciones.length -1-i;j++){ //[0] [1] : [j] [j+1]
+      let promedioA = alumnosConCalificaciones[j].obtenerPromedio();
+      let promedioB = alumnosConCalificaciones[j+1].obtenerPromedio();
+      if((orden === 'asc' && promedioA>promedioB) || (orden === 'desc' && promedioA<promedioB)){
+        //let temp = alumnosConCalificaciones[j];
+        //alumnosConCalificaciones[j] = alumnosConCalificaciones[j+1];
+        //alumnosConCalificaciones[j+1] = temp;
+        [alumnosConCalificaciones[j], alumnosConCalificaciones[j+1]] = [alumnosConCalificaciones[j+1], alumnosConCalificaciones[j]]
+      }
+    }
+  }
+
+  let listaAlumnos = document.createElement('ul');
+  alumnosConCalificaciones.forEach(alumno => {
+    let li = document.createElement('li');
+    li.textContent = `${alumno.nombre} ${alumno.apellidos} - Promedio: ${alumno.obtenerPromedio().toFixed(2)}`;
+    listaAlumnos.append(li)
+  })
+
+  content.innerHTML = '';
+  content.appendChild(listaAlumnos);
+
+}
+
+
+function mostrarFormularioOrdenarPorEdad(){
+  let content = document.getElementById('content');
+  let cursosDisponibles = cursos.map(materia => `<option value="${materia}">${materia}</option>`).join('')
+
+  content.innerHTML = `
+    <h2>Ordenar Alumnos por Edad</h2>
+    <form id="formOrdenarPorEdad">
+      <label for="materia">Selecciona la Materia:</label>
+      <select id="materia" required>
+        <option value="" selected disabled>Seleccione una materia</option>
+        ${cursosDisponibles}
+      </select><br>
+      <button type="submit">Ordenar</button>
+    </form>
+    <div id="resultadosOrdenarPorEdad"></div>
+  `;
+
+  document.getElementById('formOrdenarPorEdad').addEventListener('submit',function(e){
+    e.preventDefault();
+    let materia = document.getElementById('materia').value;
+    ordenarAlumnosPorEdad(materia);
+  })
+}
+
+function ordenarAlumnosPorEdad(materia){
+  //Filtrado de alumnos inscritos en la materia seleccionada
+  let alumnosEnMateria = alumnos.filter(alumno => alumno.materias.includes(materia));
+
+  if(alumnosEnMateria.length === 0){
+    alert('No hay alumnos inscritos en la materia seleccionada');
+    return;
+  }
+
+  //ORDENAMIENTO BURBUJA
+  for(let i=0;i<alumnosEnMateria.length -1 ;i++){
+    for(let j =0 ; j<alumnosEnMateria.length -1 -i;j++){
+      if (alumnosEnMateria[j].edad > alumnosEnMateria[j + 1].edad) {
+        [alumnosEnMateria[j], alumnosEnMateria[j + 1]] = [alumnosEnMateria[j + 1], alumnosEnMateria[j]];
+      }
+    }
+  }
+
+  //Utilizando .sort   ([0],[1])
+  //alumnosEnMateria.sort( (a,b) =>  a.edad - b.edad);
+
+  //mostrar los resultados ordenados
+  let resultadosDiv = document.getElementById('resultadosOrdenarPorEdad');
+  resultadosDiv.innerHTML = `<h3>Alumnos en ${materia} Ordenados por Edad</h3>`;
+  let listaAlumnos = document.createElement('ul');
+  alumnosEnMateria.forEach(alumno => {
+    let li = document.createElement('li');
+    li.textContent = `${alumno.nombre} ${alumno.apellidos} - Edad: ${alumno.edad}`;
+    listaAlumnos.append(li);
+  })
+
+  resultadosDiv.append(listaAlumnos)
+
+}
 
 
 
