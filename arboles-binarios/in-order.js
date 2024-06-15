@@ -42,5 +42,16 @@ function inOrder(raiz){
     return resultados;
 }
 
+// RECORRIDO RECURSIVO
+let resultadosV1= [];
+function inOrderRecursivo(nodo,resultados){
+    if(nodo !==null){ //caso base
+        inOrderRecursivo(nodo.izquierda,resultados);
+        resultados.push(nodo.valor);
+        inOrderRecursivo(nodo.derecha,resultados);
+    }
+}
+
+
 console.log(inOrder(raiz)); // [2, 4, 7, 8, 9, 11, 12, 16, 19, 21, 25]
 
