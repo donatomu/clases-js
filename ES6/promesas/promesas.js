@@ -114,7 +114,6 @@ function buscarUsuario(usuarioNombre){
 
 buscarUsuario("Juan");
 
-
 function usuario(){
     let usuario = { "nombre":"Juan", "edad":25, "email":"juan@gmail.com", "telefono":"1234567890" } 
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIENDA FAKE</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <nav>
+        <div>
+            <input type="text" id="search" placeholder="Ingrese su producto...">
+            <button onclick="buscarProductos()">Buscar</button>
+        </div>
+    </nav>
+
+    <h1>PRODUCTOS</h1>
+    <div id="productos"></div>
+
+    <!--PAGINACIÓN-->
+    <div class="pagination">
+        <button id="prevPage" onclick="cambiarPagina(-1)">Anterior</button>
+        <button id="nextPage" onclick="cambiarPagina(1)">Siguiente</button>
+    </div>
+
+    <h2>Carrito de compras</h2>
+    <div id="carrito"></div>
+
+    <!--MODAL PARA VER DETALLES-->
+    <div id="productoModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span> <!-- &times; es una X -->
+          <h2 id="modalTitulo"></h2>
+          <img id="modalImagen" src="" alt="">
+          <p id="modalDescripcion"></p>
+          <p><strong>Precio:</strong> $<span id="modalPrecio"></span></p>
+          <button id="modalAgregarCarrito">Agregar al Carrito</button>
+        </div>
+    </div>
+
+
+
+    <script src="proyecto.js"></script>
+
+
+</body>
+</html>
