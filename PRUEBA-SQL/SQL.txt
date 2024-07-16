@@ -1,0 +1,141 @@
+create table autor(
+	Id_autor int auto_increment primary key, 
+    Nombre_autor varchar(30)
+);
+
+create table editorial(
+	Cod_Ed int auto_increment primary key,
+    Nombre_Ed varchar(25),
+    Pais_Ed varchar(30),
+    Telefono_Ed varchar(40)
+);
+ 
+ create table lector(
+	Num_Tarjeta int auto_increment primary key,
+    Nombre_Lector varchar (20),
+    direccion_Lector varchar(30),
+    Telefono_Lector varchar(20)
+ );
+ 
+ create table libro(
+	Id_libro int auto_increment primary key,
+    titulo varchar(20),
+    Cod_Ed int,
+    FOREIGN KEY (Cod_Ed) REFERENCES editorial(Cod_Ed)
+ );
+ 
+ create table autor_libro(
+	Id_libro int,
+    Id_autor int,
+    FOREIGN KEY (Id_libro) REFERENCES libro(Id_libro),
+     FOREIGN KEY (Id_autor) REFERENCES autor(Id_autor)
+ );
+ 
+ create table prestamos(
+	Id_prestamo int auto_increment primary key,
+    Num_Tarjeta int,
+    fecha_salida date,
+    FOREIGN KEY (Num_Tarjeta) REFERENCES lector(Num_Tarjeta)
+ );
+ create table detalle_prestamo(
+	Id_prestamo int,
+    Id_libro int,
+    fecha_devol date,
+    mora int,
+    devuelto boolean,
+    FOREIGN KEY (Id_prestamo) REFERENCES prestamos(Id_prestamo),
+	FOREIGN KEY (Id_libro) REFERENCES libro(Id_libro)
+ );
+
+/*PARA EDITORIAL*/
+INSERT INTO editorial (Nombre_Ed,Pais_Ed,Telefono_Ed) values ('Alfa','España','456238795'), ('Beta','Mexico','456238545');
+
+INSERT INTO Autor (Nombre_Autor) VALUES
+('Gabriel García Márquez'),
+('Isabel Allende');
+
+INSERT INTO Libro (titulo, Cod_Ed) VALUES
+('Cien Años de Soledad', 1),
+('La Casa de los Espíritus', 2);
+
+INSERT INTO Lector (Nombre_Lector, Direccion_Lector, Telefono_Lector) VALUES
+('Juan Pérez', 'Calle Falsa 123', '555-1234'),
+('Ana Gómez', 'Avenida Siempre Viva 742', '555-5678');
+
+INSERT INTO autor_libro (Id_Libro, Id_Autor) VALUES
+(1, 1),
+(2, 2);
+
+INSERT INTO Prestamos (Num_Tarjeta, Fecha_Salida) VALUES
+(1, '2024-06-01'),
+(2, '2024-06-02');
+
+INSERT INTO detalle_prestamo (Id_Prestamo,Id_libro, fecha_devol,mora,devuelto) 
+values (1,1, '2024-06-01',0, 1), (2,2 , '2024-06-015', 5, 0);
+
+select * from detalle_prestamo;
+
+/* IMPORTANTE
+create table boleta(
+	Id_boleta int auto_increment primary key,
+    cliente varchar(20),
+    estado boolean
+ );
+ 
+ INSERT INTO boleta(cliente,estado) values ('Daniel',1), ('Alfredo',1);
+ 
+select * from boleta where estado = 1;
+
+select * from boleta;
+ 
+ delete from boleta where Id_boleta = 2;*/
+ 
+ /*UNA CONSULTA QUE ME PERTMITA VER EL NOMBRE DEL LECTOR, TITULO, FECHA SALIDA, FECHA DEVOL*/
+select  l.Nombre_Lector 'Lector', li.titulo 'Titulo', p.fecha_salida, d.fecha_devol, d.mora ,d.devuelto 
+from libro li, prestamos p, lector l, detalle_prestamo d
+where l.Num_Tarjeta = p.Num_Tarjeta and p.Id_prestamo = d.Id_prestamo and li.Id_libro = d.Id_libro;
+ 
+ select * from autor;
+ 
+ 
+ /*UTILIZAR EL JOIN*/
+ select 
+	Nombre_Lector, 
+    l.Titulo, 
+    p.Fecha_Salida, 
+    dp.Fecha_Devol,
+    dp.mora
+FROM Prestamos p
+INNER JOIN
+	detalle_prestamo dp ON p.Id_prestamo = dp.Id_prestamo
+INNER JOIN 
+	Libro l on l.Id_libro = dp.Id_libro
+INNER JOIN 
+	Lector lec ON p.Num_Tarjeta = lec.Num_Tarjeta
+WHERE dp.mora > 0;
+
+select * from libro;
+/*CONSULTA NORMAL*/
+select * from libro l, editorial e where l.Cod_Ed= e.Cod_Ed;
+/*OBTENER TODOS LOS LIBROS Y SU EDITORIAL, INCLUYENDO LIBROS SIN EDITORIAL ASIGNADA*/
+SELECT libro.titulo, editorial.Nombre_Ed 
+FROM libro
+LEFT JOIN 
+	editorial on Libro.Cod_Ed = Editorial.Cod_Ed;
+
+/*SUB CONSULTAS*/
+select * from autor;
+select * from autor_libro;
+/*CONSULTA PARA OBTENER LISTA DE AUTORES QUE NO TIENEN LIBROS ESCRITOS*/
+SELECT * from autor where Id_autor NOT IN ( select id_autor from autor_libro);
+
+select * from lector;
+
+/*Libros prestados por un lector especifico*/
+select id_libro from detalle_prestamo dp JOIN prestamos p on dp.id_prestamo = p.id_prestamo  where p.Num_Tarjeta = 1;
+select * from libro where id_libro IN ( select id_libro from detalle_prestamo dp JOIN prestamos p on dp.id_prestamo = p.id_prestamo  where p.Num_Tarjeta = 1  ) ;
+
+/*COUNT*/
+SELECT COUNT(*) AS Total_Libros FROM libro;
+    
+    
